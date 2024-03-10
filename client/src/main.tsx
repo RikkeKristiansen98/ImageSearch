@@ -4,6 +4,7 @@ import './index.css'
 import { Auth0Provider } from '@auth0/auth0-react'
 import { RouterProvider } from 'react-router-dom'
 import { Router } from './Router.tsx'
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 
 
