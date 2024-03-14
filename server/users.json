@@ -1,18 +1,17 @@
 [
-    {
-      "userId": "github|144779461",
-      "favorites": [
-        {
-          "link": ""
-        }
-        ]
-         },
-         {
-        "userId": "userId",
-        "favorites": [
-            {
-              "link": ""
-            }
-            ]
-    }
-        ] 
+  {
+    "imageUrl": "https://hips.hearstapps.com/hmg-prod/images/dog-puppy-on-garden-royalty-free-image-1586966191.jpg?crop=1xw:0.74975xh;center,top&resize=1200:*"
+  },
+  {
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f1/Jack_Russell_Terrier_1.jpg/220px-Jack_Russell_Terrier_1.jpg"
+  },
+  {
+    "imageUrl": "https://keyassets.timeincuk.net/inspirewp/live/wp-content/uploads/sites/14/2021/04/HAH301.legends_valegro.valegro_rio_ti_archive-920x518.jpg"
+  },
+  {
+    "imageUrl": "https://www.allaboutbirds.org/news/wp-content/uploads/2023/11/486090871-Stellers_Jay-Matt_Zuro-flip-FI-1280x960.jpg"
+  },
+  {
+    "imageUrl": "https://www.recipetineats.com/wp-content/uploads/2020/08/My-best-Vanilla-Cake_9.jpg"
+  }
+]
