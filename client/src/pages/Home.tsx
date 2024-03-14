@@ -2,6 +2,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { useState } from "react";
 import { ISearchGoogleResult } from "../models/SearchGoogleResults";
 import 'bootstrap/dist/css/bootstrap.min.css';
+import axios from "axios";
 
 export const Home = () => {
   const { isAuthenticated } = useAuth0();
@@ -11,6 +12,15 @@ export const Home = () => {
     items: [],
     searchInformation: { searchTime: "" },
   });
+
+  const saveFavoriteImage = async (imageUrl: string) => {
+    try {
+      await axios.post("http://localhost:3001/favorites", { imageUrl });
+      console.log("Favorite image saved successfully");
+    } catch (error) {
+      console.error("Error saving favorite image:", error);
+    }
+  };
 
   const handleSearch = async (query: string) => {
     try {
@@ -52,6 +62,7 @@ export const Home = () => {
             {searchResults.items.map((result, index) => (
               <div className="col-md-3 mb-3" key={index}>
                 <img className="img-fluid" src={result.link} alt={`Image ${index}`}/>
+                <button className="btn btn-primary" onClick={() => saveFavoriteImage(result.link)}>Save to Favorites</button>
               </div>
             ))}
           </div>
