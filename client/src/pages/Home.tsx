@@ -1,26 +1,46 @@
 import { useAuth0 } from "@auth0/auth0-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ISearchGoogleResult } from "../models/SearchGoogleResults";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from "axios";
 
 export const Home = () => {
-  const { isAuthenticated } = useAuth0();
+  const { isAuthenticated, user } = useAuth0(); // Get user authentication status and information from Auth0
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState<ISearchGoogleResult>({
     context: { title: "" },
     items: [],
     searchInformation: { searchTime: "" },
   });
+  useEffect(() => {
+    console.log("User object:", user);
+  }, [user]);
 
   const saveFavoriteImage = async (imageUrl: string) => {
     try {
-      await axios.post("http://localhost:3001/favorites", { imageUrl });
+      if (!isAuthenticated || !user) {
+        throw new Error("User is not authenticated");
+      }
+  
+      const userId = user.sub; // Use sub-field to get user ID
+      const favoriteImageData = {
+        user: userId,
+        favoriteImages: [
+          {
+            title: "Example Title",
+            byteSize: 12345,
+            url: imageUrl
+          }
+        ]
+      };
+  
+      await axios.post("http://localhost:3001/user-data", favoriteImageData);
       console.log("Favorite image saved successfully");
     } catch (error) {
       console.error("Error saving favorite image:", error);
     }
   };
+  
 
   const handleSearch = async (query: string) => {
     try {

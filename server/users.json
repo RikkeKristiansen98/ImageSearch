@@ -13,5 +13,58 @@
   },
   {
     "imageUrl": "https://www.recipetineats.com/wp-content/uploads/2020/08/My-best-Vanilla-Cake_9.jpg"
+  },
+  {
+    "imageUrl": "https://www.georgiaaquarium.org/wp-content/uploads/2018/08/common-bottlenose-dolphin-750x750.jpg"
+  },
+  {
+    "user": "google-oauth2|108745406896608521784",
+    "favoriteImages": [
+      {
+        "title": "Example Title",
+        "byteSize": 12345,
+        "url": "https://media.newyorker.com/photos/59095bb86552fa0be682d9d0/master/pass/Monkey-Selfie.jpg"
+      }
+    ]
+  },
+  {
+    "user": "google-oauth2|108745406896608521784",
+    "favoriteImages": [
+      {
+        "title": "Example Title",
+        "byteSize": 12345,
+        "url": "https://nationalzoo.si.edu/sites/default/files/2023-12/Waterhole_KNR.jpg"
+      }
+    ]
+  },
+  {
+    "user": "github|144779461",
+    "favoriteImages": [
+      {
+        "title": "Example Title",
+        "byteSize": 12345,
+        "url": "https://i.natgeofe.com/n/548467d8-c5f1-4551-9f58-6817a8d2c45e/NationalGeographic_2572187_2x3.jpg"
+      }
+    ]
+  },
+  {
+    "user": "github|144779461",
+    "favoriteImages": [
+      {
+        "title": "Example Title",
+        "byteSize": 12345,
+        "url": "https://news.iu.edu/live/image/gid/2/width/1000/height/893/8840_3dbd719a-2a67-436c-8664-24d18f599a72.rev.1690208832.jpg"
+      }
+    ]
+  },
+  {
+    "user": "github|144779461",
+    "favoriteImages": [
+      {
+        "title": "Example Title",
+        "byteSize": 12345,
+        "url": "https://i.pinimg.com/236x/52/e0/af/52e0af449fbc1eb5a74693e3ddc6d674.jpg"
+      }
+    ]
   }
 ]

@@ -1,71 +1,52 @@
 const express = require("express");
-const fs = require("fs");
+const fs = require("fs").promises;
 const cors = require("cors");
+const Joi = require("joi");
+
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-// Middleware 
 app.use(cors());
 app.use(express.json());
 
-// POST för att spara favoritbilder
-app.post("/favorites", (req, res) => {
-  const newFavorite = req.body;
-
-  // befintliga favoritbilder från JSON-filen
-  fs.readFile("users.json", "utf8", (err, data) => {
-    if (err) {
-      console.error("Error reading favorites file:", err);
-      res.status(500).json({ error: "Internal server error, 500" });
-      return;
-    }
-
-    try {
-      // konverterar JSON till ett JavaScript-objekt
-      const favorites = JSON.parse(data);
-      
-      favorites.push(newFavorite);
-      
-      // skriv tillbaka data till JSON med den nya favoritbilden
-      fs.writeFile("users.json", JSON.stringify(favorites, null, 2), (err) => {
-        if (err) {
-          console.error("Error writing to favorites file:", err);
-          res.status(500).json({ error: "Internal server error, 500" });
-          return;
-        }
-        
-        res.status(201).json({ message: "Favorite image saved successfully" });
-      });
-    } catch (error) {
-      console.error("Error parsing favorites data:", error);
-      res.status(500).json({ error: "Internal server error, 500" });
-    }
-  });
+// Define the Joi schema for validating the incoming data structure
+const userDataSchema = Joi.object({
+  user: Joi.string().required(),
+  favoriteImages: Joi.array().items(
+    Joi.object({
+      title: Joi.string().required(),
+      byteSize: Joi.number().required(),
+      url: Joi.string().uri().required()
+    })
+  )
 });
 
+// POST route to save user data with favorite images
+app.post("/user-data", async (req, res) => {
+  try {
+    const userData = req.body;
 
-app.get("/users/:userId/favorites", (req, res) => {
-  const userId = req.params.userId;
-
-
-  fs.readFile("users.json", "utf8", (err, data) => {
-    if (err) {
-      console.error("Error reading favorites file:", err);
-      res.status(500).json({ error: "Internal server error" });
-      return;
+    // Validate the incoming data against the Joi schema
+    const { error } = userDataSchema.validate(userData);
+    if (error) {
+      return res.status(400).json({ error: error.details[0].message });
     }
 
-    try {
-      const favorites = JSON.parse(data);
-      
-      const userFavorites = favorites.filter(favorite => favorite.userId === userId);
-      
-      res.status(200).json(userFavorites);
-    } catch (error) {
-      console.error("Error parsing favorites data:", error);
-      res.status(500).json({ error: "Internal server error" });
-    }
-  });
+    // Read existing user data from users.json
+    const data = await fs.readFile("users.json", "utf8");
+    const users = JSON.parse(data);
+
+    // Add the new user data to the existing user data
+    users.push(userData);
+
+    // Write the updated user data back to users.json
+    await fs.writeFile("users.json", JSON.stringify(users, null, 2));
+
+    res.status(201).json({ message: "User data saved successfully" });
+  } catch (error) {
+    console.error("Error saving user data:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
 });
 
 app.listen(PORT, () => {
