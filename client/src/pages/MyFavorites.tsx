@@ -4,13 +4,13 @@ import { useAuth0 } from "@auth0/auth0-react";
 
 export const MyFavorites = () => {
   const { user } = useAuth0();
-  const [favoriteImages, setFavoriteImages] = useState<string[]>([]);
+  const [favoriteImages, setFavoriteImages] = useState<any[]>([]);
 
   useEffect(() => {
-    if (!user || !user.email) return;
+    if (!user || !user.sub) return;
 
-    const userId = user.email;
-    const url = `http://localhost:3000/users/${userId}/favorites`;
+    const userId = user.sub; 
+    const url = `http://localhost:3001/user-data/${userId}/favorites`;
 
     const fetchUserFavorites = async () => {
       try {
@@ -18,21 +18,23 @@ export const MyFavorites = () => {
         setFavoriteImages(response.data);
         console.log(response.data);
       } catch (error) {
-        console.error("error getting favorites", error);
+        console.error("Error getting favorites:", error);
       }
     };
 
     fetchUserFavorites();
-  }, [user?.email]);
+  }, [user?.sub]);
 
   return (
     <>
       <h4>Your favorite images</h4>
       <div>
         {favoriteImages.length > 0 ? (
-          favoriteImages.map((image, index) => (
+          favoriteImages.map((favorite, index) => (
             <div key={index}>
-              <img src={image} alt={`Favorite Image ${index}`} />
+              <img src={favorite.url} alt={`Favorite Image ${index}`} />
+              <p>Title: {favorite.title}</p>
+              <p>Byte Size: {favorite.byteSize}</p>
             </div>
           ))
         ) : (
@@ -42,3 +44,5 @@ export const MyFavorites = () => {
     </>
   );
 };
+
+export default MyFavorites;
