@@ -5,7 +5,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from "axios";
 
 export const Home = () => {
-  const { isAuthenticated, user } = useAuth0(); // Get user authentication status and information from Auth0
+  const { isAuthenticated, user } = useAuth0(); 
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState<ISearchGoogleResult>({
     context: { title: "" },
@@ -16,18 +16,18 @@ export const Home = () => {
     console.log("User object:", user);
   }, [user]);
 
-  const saveFavoriteImage = async (imageUrl: string) => {
+  const saveFavoriteImage = async (imageUrl: string, title: string) => {
     try {
       if (!isAuthenticated || !user) {
         throw new Error("User is not authenticated");
       }
   
-      const userId = user.sub; // Use sub-field to get user ID
+      const userId = user.sub; 
       const favoriteImageData = {
         user: userId,
         favoriteImages: [
           {
-            title: "Example Title",
+            title: title, 
             byteSize: 12345,
             url: imageUrl
           }
@@ -41,6 +41,7 @@ export const Home = () => {
     }
   };
   
+  
 
   const handleSearch = async (query: string) => {
     try {
@@ -51,6 +52,7 @@ export const Home = () => {
       const data: ISearchGoogleResult = await response.json();
       setSearchResults(data);
       setSearchQuery("");
+      console.log("Search results:", data);
     } catch (error) {
       console.error('Error fetching data:', error);
     }
@@ -82,7 +84,7 @@ export const Home = () => {
             {searchResults.items.map((result, index) => (
               <div className="col-md-3 mb-3" key={index}>
                 <img className="img-fluid" src={result.link} alt={`Image ${index}`}/>
-                <button className="btn btn-primary" onClick={() => saveFavoriteImage(result.link)}>Save to Favorites</button>
+                <button className="btn btn-primary" onClick={() => saveFavoriteImage(result.link, result.title)}>Save to Favorites</button>
               </div>
             ))}
           </div>

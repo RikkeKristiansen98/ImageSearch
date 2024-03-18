@@ -9,7 +9,7 @@ const PORT = process.env.PORT || 3001;
 app.use(cors());
 app.use(express.json());
 
-// Define the Joi schema for validating the incoming data structure
+// datastruktur, validering
 const userDataSchema = Joi.object({
   user: Joi.string().required(),
   favoriteImages: Joi.array().items(
@@ -21,31 +21,54 @@ const userDataSchema = Joi.object({
   )
 });
 
-// POST route to save user data with favorite images
+
+// POST lagra användar data med favorittbild
 app.post("/user-data", async (req, res) => {
   try {
     const userData = req.body;
-
-    // Validate the incoming data against the Joi schema
+    console.log(req.body)
+    // Validering 
     const { error } = userDataSchema.validate(userData);
     if (error) {
       return res.status(400).json({ error: error.details[0].message });
     }
 
-    // Read existing user data from users.json
+    //  existerande användar data från json filen
     const data = await fs.readFile("users.json", "utf8");
     const users = JSON.parse(data);
 
-    // Add the new user data to the existing user data
+    //  ny användar data till existerande
     users.push(userData);
 
-    // Write the updated user data back to users.json
+    // uppdaterat användar data till user.json
     await fs.writeFile("users.json", JSON.stringify(users, null, 2));
 
     res.status(201).json({ message: "User data saved successfully" });
   } catch (error) {
     console.error("Error saving user data:", error);
-    res.status(500).json({ error: "Internal server error" });
+    res.status(500).json({ error: "500" });
+  }
+});
+
+app.get("/user-data/:userId/favorites", async (req, res) => {
+  try {
+    const userId = req.params.userId;
+
+    // Läs användardata från users.json
+    const data = await fs.readFile("users.json", "utf8");
+    const users = JSON.parse(data);
+
+    const user = users.find(user => user.user === userId);
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    // returnerar favoritbilder för den angivna användaren
+    res.status(200).json(user.favoriteImages);
+  } catch (error) {
+    console.error("Error fetching user favorites:", error);
+    res.status(500).json({ error: "500" });
   }
 });
 
