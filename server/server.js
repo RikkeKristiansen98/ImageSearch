@@ -50,17 +50,20 @@ app.post("/user-data", async (req, res) => {
 
 
 // GET för att hämta favoritbilder 
-
-app.get("/users", async (req, res) => {
+app.get("/users/:userId", async (req, res) => {
   try {
+    const userId = req.params.userId;
     const data = await fs.readFile("users.json", "utf8");
     const users = JSON.parse(data);
-    res.json(users);
+    
+    const userFavorites = users.filter(user => user.user === userId);
+    res.json(userFavorites);
   } catch (error) {
-    console.error("Error fetching users:", error);
+    console.error("Error fetching user favorites:", error);
     res.status(500).json({ error: "500" });
   }
 });
+
 
 
 app.listen(PORT, () => {

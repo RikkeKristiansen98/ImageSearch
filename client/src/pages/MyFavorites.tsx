@@ -1,56 +1,46 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useAuth0 } from "@auth0/auth0-react";
+import { IImageResultItem } from "../models/ImageResult";
 
 export const MyFavorites = () => {
-  const { user } = useAuth0();
-  const [favoriteImages, setFavoriteImages] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
+  const {user} = useAuth0()
 
+  const [favorites, setFavorites] = useState<IImageResultItem[]>([]);
+
+  const userId = user?.sub;
+  
   useEffect(() => {
-    if (!user || !user.sub) return;
+      const fetchData = async () => {
+          try {
+            const response = await axios.get(`http://localhost:3001/users/${userId}`);
+            setFavorites(response.data)
+              console.log(response.data)
 
-    const userId = user.sub;
-    console.log("User ID:", userId);
-    const url = `http://localhost:3001/users`;
+          }catch (error) {
+              console.log("Error fetching data", error)
+          }
+      };
+      fetchData()
+  },[]);
 
-    const fetchUserFavorites = async () => {
-      try {
-        const response = await axios.get(url);
-        setFavoriteImages(response.data);
-        setLoading(false);
-      } catch (error) {
-        console.error("Error getting favorites:", error);
-        setLoading(false);
-      }
-    };
 
-    fetchUserFavorites();
-  }, [user?.sub]);
-
-  return (
-    <div className="container mt-5">
-      <h4>Your favorite images</h4>
-      {loading ? (
-        <p>Loading...</p>
-      ) : (
-        <div>
-          {favoriteImages.length > 0 ? (
-            favoriteImages.map((favorite, index) => (
-              <div className="col-md-4 mb-4" key={index}>
-                <div>
-                  <img src={favorite.url} className="card-img-top" alt={`Favorite Image ${index}`} />
-                  <div>
-                    <h5>{favorite.title}</h5>
-                  </div>
-                </div>
-              </div>
-            ))
+  
+    return (
+      <div>
+          <h2>My favorite images</h2>
+          {favorites.length > 0 ? (
+              <ul className="images-container">
+                  {favorites?.map((item, i) => (
+                      <li key={i}>
+                          <img className="favorite-img" src={item.url} alt={item.title}  />
+                          
+                      </li>
+                  ))}
+              </ul>
           ) : (
-            <p>No images found</p>
+              <p>No images available</p>
           )}
-        </div>
-      )}
-    </div>
+      </div>
   );
-};
+          };
