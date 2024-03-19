@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useAuth0 } from "@auth0/auth0-react";
-import { IImageResultItem } from "../models/ImageResult";
+import { IImageResult } from "../models/ImageResult";
 
 export const MyFavorites = () => {
   const {user} = useAuth0()
 
-  const [favorites, setFavorites] = useState<IImageResultItem[]>([]);
+  const [favorites, setFavorites] = useState<IImageResult[]>([]);
 
   const userId = user?.sub;
   
@@ -31,9 +31,9 @@ export const MyFavorites = () => {
           <h2>My favorite images</h2>
           {favorites.length > 0 ? (
               <ul className="images-container">
-                  {favorites?.map((item, i) => (
+                  {favorites?.map((images, i) => (
                       <li key={i}>
-                          <img className="favorite-img" src={item.url} alt={item.title}  />
+                          <img className="favorite-img" src={images.url} alt={images.title}  />
                           
                       </li>
                   ))}

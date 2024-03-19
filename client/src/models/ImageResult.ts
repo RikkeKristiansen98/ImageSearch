@@ -1,4 +1,4 @@
-export interface IImageResultItem {
+export interface IImageResult {
     url: string; 
     title: string;
 }

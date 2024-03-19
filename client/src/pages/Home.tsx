@@ -28,7 +28,6 @@ export const Home = () => {
         favoriteImages: [
           {
             title: title, 
-            byteSize: 12345,
             url: imageUrl
           }
         ]

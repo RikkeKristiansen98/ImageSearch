@@ -5,7 +5,6 @@ export interface ISearchGoogleResult {
   items: {
     link: string;
     title: string; 
-    byteSize: number; 
   }[];
   searchInformation: {
     searchTime: string;

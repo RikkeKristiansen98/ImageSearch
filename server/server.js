@@ -15,7 +15,6 @@ const userDataSchema = Joi.object({
   favoriteImages: Joi.array().items(
     Joi.object({
       title: Joi.string().required(),
-      byteSize: Joi.number().required(),
       url: Joi.string().uri().required()
     })
   )
