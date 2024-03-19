@@ -5,20 +5,23 @@ import { useAuth0 } from "@auth0/auth0-react";
 export const MyFavorites = () => {
   const { user } = useAuth0();
   const [favoriteImages, setFavoriteImages] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (!user || !user.sub) return;
 
-    const userId = user.sub; 
-    const url = `http://localhost:3001/user-data/${userId}/favorites`;
+    const userId = user.sub;
+    console.log("User ID:", userId);
+    const url = `http://localhost:3001/users`;
 
     const fetchUserFavorites = async () => {
       try {
         const response = await axios.get(url);
         setFavoriteImages(response.data);
-        console.log(response.data);
+        setLoading(false);
       } catch (error) {
         console.error("Error getting favorites:", error);
+        setLoading(false);
       }
     };
 
@@ -26,23 +29,28 @@ export const MyFavorites = () => {
   }, [user?.sub]);
 
   return (
-    <>
+    <div className="container mt-5">
       <h4>Your favorite images</h4>
-      <div>
-        {favoriteImages.length > 0 ? (
-          favoriteImages.map((favorite, index) => (
-            <div key={index}>
-              <img src={favorite.url} alt={`Favorite Image ${index}`} />
-              <p>Title: {favorite.title}</p>
-              <p>Byte Size: {favorite.byteSize}</p>
-            </div>
-          ))
-        ) : (
-          <p>No images found</p>
-        )}
-      </div>
-    </>
+      {loading ? (
+        <p>Loading...</p>
+      ) : (
+        <div>
+          {favoriteImages.length > 0 ? (
+            favoriteImages.map((favorite, index) => (
+              <div className="col-md-4 mb-4" key={index}>
+                <div>
+                  <img src={favorite.url} className="card-img-top" alt={`Favorite Image ${index}`} />
+                  <div>
+                    <h5>{favorite.title}</h5>
+                  </div>
+                </div>
+              </div>
+            ))
+          ) : (
+            <p>No images found</p>
+          )}
+        </div>
+      )}
+    </div>
   );
 };
-
-export default MyFavorites;
