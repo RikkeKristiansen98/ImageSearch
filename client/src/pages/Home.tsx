@@ -1,5 +1,6 @@
 import { useAuth0 } from "@auth0/auth0-react";
 import { useEffect, useState } from "react";
+import { Modal, Button } from 'react-bootstrap';
 import { ISearchGoogleResult } from "../models/SearchGoogleResults";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from "axios";
@@ -7,6 +8,7 @@ import axios from "axios";
 export const Home = () => {
   const { isAuthenticated, user } = useAuth0(); 
   const [searchQuery, setSearchQuery] = useState("");
+  const [showModal, setShowModal] = useState(false);
   const [searchResults, setSearchResults] = useState<ISearchGoogleResult>({
     context: { title: "" },
     items: [],
@@ -35,6 +37,7 @@ export const Home = () => {
   
       await axios.post("http://localhost:3001/user-data", favoriteImageData);
       console.log("Favorite image saved successfully");
+      setShowModal(true); 
     } catch (error) {
       console.error("Error saving favorite image:", error);
     }
@@ -62,15 +65,28 @@ export const Home = () => {
     await handleSearch(event.currentTarget.textContent || "");
   };
 
-  return (
+   return (
     <div className="container mt-5">
+      <Modal show={showModal} onHide={() => setShowModal(false)}>
+      <Modal.Header closeButton>
+        <Modal.Title>Success</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>This image is now saved in your favorite images page!</Modal.Body>
+      <Modal.Footer>
+        <Button variant="primary" onClick={() => setShowModal(false)}>Close</Button>
+      </Modal.Footer>
+    </Modal>
       {isAuthenticated ? (
         <>
-          <div className="mb-3 d-flex">
-            <input type="text" placeholder="Search images" className="form-control" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
-            <button className="btn btn-primary ms-2" onClick={() => handleSearch(searchQuery)}>Search</button>
+          <div className="row mb-3">
+            <div className="col-md-8">
+              <input type="text" placeholder="Search images" className="form-control" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
+            </div>
+            <div className="col-md-4">
+              <button className="btn btn-primary btn-block" onClick={() => handleSearch(searchQuery)}>Search</button>
+            </div>
           </div>
-          <p>Search Time: {searchResults.searchInformation.searchTime}</p>
+          <p className="mb-3">Search Time: {searchResults.searchInformation.searchTime}</p>
           {searchResults.spelling && searchResults.spelling.correctedQuery && (
             <p>
               Did you mean:{" "}
@@ -83,13 +99,13 @@ export const Home = () => {
             {searchResults.items.map((result, index) => (
               <div className="col-md-3 mb-3" key={index}>
                 <img className="img-fluid" src={result.link} alt={`Image ${index}`}/>
-                <button className="btn btn-primary" onClick={() => saveFavoriteImage(result.link, result.title)}>Save to Favorites</button>
+                <button className="btn btn-primary btn-block mt-2" onClick={() => saveFavoriteImage(result.link, result.title)}>Save to Favorites</button>
               </div>
             ))}
           </div>
         </>
       ) : (
-       <><p>Log in to search after images and save your favorites.</p> </> 
+       <p>Log in to search after images and save your favorites.</p> 
       )}
     </div>
   );
