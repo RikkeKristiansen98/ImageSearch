@@ -4,6 +4,7 @@ import { Modal, Button } from 'react-bootstrap';
 import { ISearchGoogleResult } from "../models/SearchGoogleResults";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from "axios";
+import "../styles/ImageCard.css";
 
 export const Home = () => {
   const { isAuthenticated, user } = useAuth0(); 
@@ -43,15 +44,10 @@ export const Home = () => {
     }
   };
   
-  
-
   const handleSearch = async (query: string) => {
     try {
-      const response = await fetch(`https://www.googleapis.com/customsearch/v1?key=${import.meta.env.VITE_GOOGLE_API_KEY}&cx=${import.meta.env.VITE_SEARCH_ENGINE_KEY}&num=10&searchType=image&q=${query}`);
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      const data: ISearchGoogleResult = await response.json();
+      const response = await axios.get(`https://www.googleapis.com/customsearch/v1?key=${import.meta.env.VITE_GOOGLE_API_KEY}&cx=${import.meta.env.VITE_SEARCH_ENGINE_KEY}&num=10&searchType=image&q=${query}`);
+      const data: ISearchGoogleResult = response.data;
       setSearchResults(data);
       setSearchQuery("");
       console.log("Search results:", data);
@@ -65,17 +61,17 @@ export const Home = () => {
     await handleSearch(event.currentTarget.textContent || "");
   };
 
-   return (
+  return (
     <div className="container mt-5">
       <Modal show={showModal} onHide={() => setShowModal(false)}>
-      <Modal.Header closeButton>
-        <Modal.Title>Success</Modal.Title>
-      </Modal.Header>
-      <Modal.Body>This image is now saved in your favorite images page!</Modal.Body>
-      <Modal.Footer>
-        <Button variant="primary" onClick={() => setShowModal(false)}>Close</Button>
-      </Modal.Footer>
-    </Modal>
+        <Modal.Header closeButton>
+          <Modal.Title>Success</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>This image is now saved in your favorite images page!</Modal.Body>
+        <Modal.Footer>
+          <Button variant="primary" onClick={() => setShowModal(false)}>Close</Button>
+        </Modal.Footer>
+      </Modal>
       {isAuthenticated ? (
         <>
           <div className="row mb-3">
@@ -98,15 +94,17 @@ export const Home = () => {
           <div className="row">
             {searchResults.items.map((result, index) => (
               <div className="col-md-3 mb-3" key={index}>
-                <img className="img-fluid" src={result.link} alt={`Image ${index}`}/>
+                <div className="image-container">
+                  <img className="img-fluid" src={result.link} alt={`Image ${index}`} />
+                </div>
                 <button className="btn btn-primary btn-block mt-2" onClick={() => saveFavoriteImage(result.link, result.title)}>Save to Favorites</button>
               </div>
             ))}
           </div>
         </>
       ) : (
-       <p>Log in to search after images and save your favorites.</p> 
+        <p>Log in to search after images and save your favorites.</p> 
       )}
     </div>
   );
-};
+      }

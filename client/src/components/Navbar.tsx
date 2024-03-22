@@ -1,3 +1,4 @@
+import React from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import LoginButton from "../components/LoginButton";
 import LogoutButton from "../components/LogoutButton";
@@ -13,19 +14,8 @@ export const Navbar = () => {
         <NavLink className="navbar-brand" to="/">
           Image Search
         </NavLink>
-        <button
-          className="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarNav"
-          aria-controls="navbarNav"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
-          <span className="navbar-toggler-icon"></span>
-        </button>
-        <div className="collapse navbar-collapse" id="navbarNav">
-          <ul className="navbar-nav ms-auto">
+        <div className="d-flex justify-content-end flex-grow-2">
+          <ul className="navbar-nav">
             <li className={`nav-item ${location.pathname === '/' ? 'active' : ''}`}>
               <NavLink className="nav-link" to="/">
                 Home
@@ -37,9 +27,9 @@ export const Navbar = () => {
               </NavLink>
             </li>
           </ul>
-          <div>
-            {isAuthenticated ? <LogoutButton /> : <LoginButton />}
-          </div>
+        </div>
+        <div>
+          {isAuthenticated ? <LogoutButton /> : <LoginButton />}
         </div>
       </div>
     </nav>
