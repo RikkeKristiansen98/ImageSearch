@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useAuth0 } from "@auth0/auth0-react";
 import { IImageResult } from "../models/ImageResult";
+import "../styles/ImageCard.css";
 
 export const MyFavorites = () => {
   const { user } = useAuth0();
@@ -16,7 +17,7 @@ export const MyFavorites = () => {
         setFavorites(favoriteImages);
         console.log(response.data)
       } catch (error) {
-        console.log("Error fetching data", error);
+        console.log("Error fetching data");
       }
     };
     fetchData();
@@ -28,17 +29,18 @@ export const MyFavorites = () => {
       {favorites.length > 0 ? (
         <div className="row">
           {favorites.map((image, index) => (
-            <div key={index} className="col-md-3 mb-4">
-              <div className="card">
-                <img className="card-img-top" src={image.url} alt={image.title} />
-                </div>
+            <div key={index} className="col-md-4 mb-4">
+              <div className="image-container">
+                <img src={image.url} alt={image.title} />
               </div>
+            </div>
           ))}
         </div>
       ) : (
-        <p className="mt-4">No images available</p>
+        <p className="mt-4">No favorite images available</p>
       )}
     </div>
   );
-      };
+}
+
 
